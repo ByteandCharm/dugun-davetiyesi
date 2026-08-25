@@ -22,8 +22,8 @@
     // ========================================
     const elements = {
         envelopeContainer: document.getElementById('envelopeContainer'),
-        envelope: document.getElementById('envelope'),
-        envelopeFlap: document.getElementById('envelopeFlap'),
+        letterWrapper: document.getElementById('letterWrapper'),
+        envelopeFlap: document.getElementById('envelopeFlapTop'),
         invitationMain: document.getElementById('invitationMain'),
         countdown: {
             days: document.getElementById('days'),
@@ -32,7 +32,8 @@
             seconds: document.getElementById('seconds')
         },
         musicToggle: document.getElementById('musicToggle'),
-        scrollIndicator: document.getElementById('scrollIndicator')
+        scrollIndicator: document.getElementById('scrollIndicator'),
+        bgParticles: document.getElementById('bgParticles')
     };
 
     // ========================================
@@ -135,10 +136,10 @@
         
         state.isEnvelopeOpen = true;
         
-        // Add open class for CSS animation
-        elements.envelope.classList.add('open');
+        // Add open class for CSS animation (on container)
+        elements.envelopeContainer.classList.add('open');
         
-        // Hide envelope container after animation
+        // Hide envelope container after animation completes
         setTimeout(() => {
             elements.envelopeContainer.classList.add('hidden');
             
@@ -146,7 +147,7 @@
             setTimeout(() => {
                 showInvitation();
             }, 300);
-        }, CONFIG.envelopeAnimationDuration);
+        }, 1700);
         
         // Create burst particles
         createBurstParticles();
@@ -204,7 +205,7 @@
     }
 
     function createBurstParticles() {
-        const rect = elements.envelope.getBoundingClientRect();
+        const rect = elements.letterWrapper.getBoundingClientRect();
         const centerX = rect.left + rect.width / 2;
         const centerY = rect.top + rect.height / 2;
         
@@ -373,7 +374,7 @@
     // Keyboard Navigation
     // ========================================
     function initKeyboardNavigation() {
-        elements.envelope.addEventListener('keydown', (e) => {
+        elements.letterWrapper.addEventListener('keydown', (e) => {
             if (e.key === 'Enter' || e.key === ' ') {
                 e.preventDefault();
                 openEnvelope();
@@ -381,9 +382,9 @@
         });
 
         // Add tabindex to envelope for keyboard access
-        elements.envelope.setAttribute('tabindex', '0');
-        elements.envelope.setAttribute('role', 'button');
-        elements.envelope.setAttribute('aria-label', 'Davetiyeyi aç');
+        elements.letterWrapper.setAttribute('tabindex', '0');
+        elements.letterWrapper.setAttribute('role', 'button');
+        elements.letterWrapper.setAttribute('aria-label', 'Davetiyeyi aç');
     }
 
     // ========================================
@@ -392,11 +393,11 @@
     function initTouchSupport() {
         let touchStartY = 0;
         
-        elements.envelope.addEventListener('touchstart', (e) => {
+        elements.letterWrapper.addEventListener('touchstart', (e) => {
             touchStartY = e.touches[0].clientY;
         }, { passive: true });
         
-        elements.envelope.addEventListener('touchend', (e) => {
+        elements.letterWrapper.addEventListener('touchend', (e) => {
             const touchEndY = e.changedTouches[0].clientY;
             const diff = touchStartY - touchEndY;
             
@@ -454,7 +455,7 @@
             initScrollAnimations();
         } else {
             // Set up envelope click/touch/keyboard
-            elements.envelope.addEventListener('click', () => {
+            elements.letterWrapper.addEventListener('click', () => {
                 openEnvelope();
                 sessionStorage.setItem('envelopeOpened', 'true');
             });
