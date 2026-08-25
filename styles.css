@@ -518,10 +518,15 @@ body {
 }
 
 .parents-row {
-    display: grid;
-    grid-template-columns: 1fr 1fr;
+    display: flex;
+    flex-direction: column;
     gap: 1.2rem;
     align-items: center;
+}
+
+.parent-card {
+    width: 100%;
+    max-width: 340px;
 }
 
 .parent-card {
@@ -792,8 +797,6 @@ body {
     
     .wedding-date time { font-size: 1.5rem; }
     .wedding-date .time { font-size: 1rem; }
-    
-    .parents-row { grid-template-columns: 1fr; }
     
     .countdown-value { font-size: 1.7rem; }
     .countdown-divider { font-size: 1.7rem; }
