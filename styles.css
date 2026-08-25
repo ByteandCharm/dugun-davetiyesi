@@ -675,6 +675,27 @@ body {
     50% { opacity: 0.5; }
 }
 
+/* Countdown header */
+.countdown-header {
+    text-align: center;
+    margin-bottom: 0.25rem;
+}
+
+.countdown-header-title {
+    font-family: 'Great Vibes', cursive;
+    font-size: 2.4rem;
+    color: var(--burgundy);
+    line-height: 1.1;
+}
+
+.countdown-header-sub {
+    font-family: 'Libre Baskerville', serif;
+    font-style: italic;
+    font-size: 0.95rem;
+    color: var(--text-medium);
+    margin-top: 0.25rem;
+}
+
 /* ========================================
    Footer
    ======================================== */
