@@ -582,6 +582,15 @@ body {
     margin-bottom: 0.35rem;
 }
 
+.parent-sub {
+    font-family: 'Libre Baskerville', serif;
+    font-size: 1.05rem;
+    font-weight: 600;
+    color: var(--text-medium);
+    font-style: italic;
+    margin-bottom: 0.35rem;
+}
+
 .parent-role {
     font-size: 0.8rem;
     color: var(--text-medium);
