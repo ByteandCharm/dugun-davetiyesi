@@ -108,10 +108,10 @@
                             <div class="card-lace-corner bl"></div>
                             <div class="card-lace-corner br"></div>
                             
-                            <h3 class="parent-title">Damlalar</h3>
-                            <p class="parent-names">Cengiz <span class="ampersand-small">&</span> Şükran</p>
-                            <p class="parent-surname">Demir</p>
-                            <p class="parent-role">Babaanne ve Dede</p>
+                        <h3 class="parent-title">Ailemiz</h3>
+                        <p class="parent-names">Cengiz <span class="ampersand-small">&</span> Şükran</p>
+                        <p class="parent-surname">Demir</p>
+                        <p class="parent-role">Anne ve Baba</p>
                         </div>
                         
                         <!-- Right: Bride's Parents -->
@@ -121,10 +121,10 @@
                             <div class="card-lace-corner bl"></div>
                             <div class="card-lace-corner br"></div>
                             
-                            <h3 class="parent-title">Damlalar</h3>
-                            <p class="parent-names">Zübeyde <span class="ampersand-small">&</span> Oğuz</p>
-                            <p class="parent-surname">Har</p>
-                            <p class="parent-role">Babaanne ve Dede</p>
+                        <h3 class="parent-title">Ailemiz</h3>
+                        <p class="parent-names">Zübeyde <span class="ampersand-small">&</span> Oğuz</p>
+                        <p class="parent-surname">Har</p>
+                        <p class="parent-role">Anne ve Baba</p>
                         </div>
                     </div>
                     
@@ -167,7 +167,7 @@
         </main>
 
         <!-- Music Toggle -->
-        <button class="music-toggle" id="musicToggle" aria-label="Müziği aç/kapat" title="Müziği aç/kapat">
+        <button class="music-toggle muted" id="musicToggle" aria-label="Müziği aç/kapat" title="Müziği aç/kapat">
             <svg class="music-icon" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
                 <path d="M9 18V5l12-2v13"/>
                 <circle cx="6" cy="18" r="3"/>
@@ -186,6 +186,20 @@
             <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
                 <polyline points="6 9 12 15 18 9"/>
             </svg>
+        </div>
+
+        <!-- Music Permission Modal -->
+        <div class="permission-overlay" id="permissionOverlay" aria-hidden="true">
+            <div class="permission-modal" role="dialog" aria-modal="true" aria-labelledby="permTitle">
+                <div class="permission-lace-top"></div>
+                <h2 class="permission-title" id="permTitle">Müzik Çalsın mı?</h2>
+                <p class="permission-text">Davetiyeye özel hazırlanan şarkıyı çalmamızı ister misiniz?</p>
+                <div class="permission-buttons">
+                    <button class="permission-btn yes" id="permissionYes">Evet, Çalsın</button>
+                    <button class="permission-btn no" id="permissionNo">Hayır, Teşekkürler</button>
+                </div>
+                <div class="permission-lace-bottom"></div>
+            </div>
         </div>
     </div>
 

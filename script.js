@@ -33,7 +33,10 @@
         },
         musicToggle: document.getElementById('musicToggle'),
         scrollIndicator: document.getElementById('scrollIndicator'),
-        bgParticles: document.getElementById('bgParticles')
+        bgParticles: document.getElementById('bgParticles'),
+        permissionOverlay: document.getElementById('permissionOverlay'),
+        permissionYes: document.getElementById('permissionYes'),
+        permissionNo: document.getElementById('permissionNo')
     };
 
     // ========================================
@@ -43,6 +46,7 @@
         isEnvelopeOpen: false,
         isInvitationVisible: false,
         isMusicPlaying: false,
+        musicPermissionAsked: false,
         countdownInterval: null,
         particleInterval: null,
         audioContext: null,
@@ -169,6 +173,9 @@
         
         // Initialize scroll animations
         initScrollAnimations();
+        
+        // Ask for music permission
+        setTimeout(showPermissionModal, 600);
     }
 
     // ========================================
@@ -320,42 +327,78 @@
     function initMusicToggle() {
         elements.musicToggle.addEventListener('click', () => {
             if (!state.isMusicPlaying) {
-                state.isMusicPlaying = true;
-                elements.musicToggle.classList.remove('muted');
-                elements.musicToggle.setAttribute('aria-label', 'Müziği kapat');
-                elements.musicToggle.title = 'Müziği kapat';
-
-                if (ytReady && ytPlayer) {
-                    // If we previously reached the end, restart from 0:30
-                    const t = ytPlayer.getCurrentTime();
-                    if (t >= MUSIC.end - 0.5 || t < MUSIC.start) {
-                        ytPlayer.seekTo(MUSIC.start, true);
-                    }
-                    ytPlayer.playVideo();
-                } else {
-                    // Player not ready yet; retry shortly
-                    let attempts = 0;
-                    const tryPlay = setInterval(() => {
-                        attempts++;
-                        if (ytReady && ytPlayer) {
-                            ytPlayer.seekTo(MUSIC.start, true);
-                            ytPlayer.playVideo();
-                            clearInterval(tryPlay);
-                        } else if (attempts > 40) {
-                            clearInterval(tryPlay);
-                        }
-                    }, 250);
-                }
+                startMusic();
             } else {
-                state.isMusicPlaying = false;
-                elements.musicToggle.classList.add('muted');
-                elements.musicToggle.setAttribute('aria-label', 'Müziği aç');
-                elements.musicToggle.title = 'Müziği aç';
-
-                if (ytPlayer) {
-                    ytPlayer.pauseVideo();
-                }
+                stopMusic();
             }
+        });
+    }
+
+    // Start the YouTube song (must be called from a user gesture)
+    function startMusic() {
+        state.isMusicPlaying = true;
+        elements.musicToggle.classList.remove('muted');
+        elements.musicToggle.setAttribute('aria-label', 'Müziği kapat');
+        elements.musicToggle.title = 'Müziği kapat';
+
+        const play = () => {
+            if (ytReady && ytPlayer) {
+                const t = ytPlayer.getCurrentTime();
+                if (typeof t !== 'number' || t >= MUSIC.end - 0.5 || t < MUSIC.start) {
+                    ytPlayer.seekTo(MUSIC.start, true);
+                }
+                ytPlayer.playVideo();
+            }
+        };
+
+        if (ytReady && ytPlayer) {
+            play();
+        } else {
+            let attempts = 0;
+            const tryPlay = setInterval(() => {
+                attempts++;
+                if (ytReady && ytPlayer) {
+                    play();
+                    clearInterval(tryPlay);
+                } else if (attempts > 60) {
+                    clearInterval(tryPlay);
+                }
+            }, 250);
+        }
+    }
+
+    function stopMusic() {
+        state.isMusicPlaying = false;
+        elements.musicToggle.classList.add('muted');
+        elements.musicToggle.setAttribute('aria-label', 'Müziği aç');
+        elements.musicToggle.title = 'Müziği aç';
+
+        if (ytPlayer) {
+            ytPlayer.pauseVideo();
+        }
+    }
+
+    // ========================================
+    // Music Permission Modal
+    // ========================================
+    function showPermissionModal() {
+        if (state.musicPermissionAsked) return;
+        state.musicPermissionAsked = true;
+        elements.permissionOverlay.classList.add('visible');
+        elements.permissionOverlay.setAttribute('aria-hidden', 'false');
+    }
+
+    function initPermissionModal() {
+        elements.permissionYes.addEventListener('click', () => {
+            elements.permissionOverlay.classList.remove('visible');
+            elements.permissionOverlay.setAttribute('aria-hidden', 'true');
+            startMusic(); // gesture -> audio allowed
+        });
+
+        elements.permissionNo.addEventListener('click', () => {
+            elements.permissionOverlay.classList.remove('visible');
+            elements.permissionOverlay.setAttribute('aria-hidden', 'true');
+            // Keep music off; toggle still works later
         });
     }
 
@@ -491,6 +534,7 @@
         }
         
         initMusicToggle();
+        initPermissionModal();
         initScrollIndicator();
         
         // Handle visibility change for countdown
