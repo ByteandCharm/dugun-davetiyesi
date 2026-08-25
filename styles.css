@@ -600,11 +600,12 @@ body {
 .countdown-card {
     position: relative;
     padding: 1.8rem 1rem;
-    margin-top: 0.5rem;
+    margin-top: 0;
     text-align: center;
     background: linear-gradient(145deg, var(--cream) 0%, var(--white) 100%);
-    border-radius: 12px;
+    border-radius: 0 0 12px 12px;
     border: 1px solid rgba(139, 26, 58, 0.15);
+    border-top: none;
     box-shadow: var(--shadow-medium);
     overflow: hidden;
 }
@@ -675,10 +676,24 @@ body {
     50% { opacity: 0.5; }
 }
 
-/* Countdown header */
+/* Countdown header - unified panel with countdown card */
 .countdown-header {
+    position: relative;
     text-align: center;
-    margin-bottom: 0.25rem;
+    padding: 1.4rem 1rem 1rem;
+    background: linear-gradient(145deg, var(--cream) 0%, var(--white) 100%);
+    border: 1px solid rgba(139, 26, 58, 0.15);
+    border-bottom: none;
+    border-radius: 12px 12px 0 0;
+    box-shadow: var(--shadow-medium);
+}
+
+.countdown-header-lace {
+    height: 12px;
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 12'%3E%3Cpath fill='%238B1A3A' d='M0 12 Q25 0 50 12 T100 12'/%3E%3C/svg%3E");
+    background-size: 100px 12px;
+    opacity: 0.45;
+    margin: 0;
 }
 
 .countdown-header-title {
@@ -688,12 +703,18 @@ body {
     line-height: 1.1;
 }
 
+.countdown-header-divider {
+    display: block;
+    font-size: 1.1rem;
+    color: var(--gold);
+    margin: 0.2rem 0;
+}
+
 .countdown-header-sub {
     font-family: 'Libre Baskerville', serif;
     font-style: italic;
     font-size: 0.95rem;
     color: var(--text-medium);
-    margin-top: 0.25rem;
 }
 
 /* ========================================
