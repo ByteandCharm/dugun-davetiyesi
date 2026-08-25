@@ -271,63 +271,89 @@
     }
 
     // ========================================
-    // Music Toggle
+    // Music Toggle (YouTube Song)
     // ========================================
-    function initMusicToggle() {
-        // Create a simple ambient sound using Web Audio API
-        function createAmbientSound() {
-            if (!state.audioContext) {
-                state.audioContext = new (window.AudioContext || window.webkitAudioContext)();
-            }
-            
-            const oscillator = state.audioContext.createOscillator();
-            const gainNode = state.audioContext.createGain();
-            
-            oscillator.type = 'sine';
-            oscillator.frequency.setValueAtTime(220, state.audioContext.currentTime); // A3
-            oscillator.frequency.exponentialRampToValueAtTime(440, state.audioContext.currentTime + 4); // A4
-            oscillator.frequency.exponentialRampToValueAtTime(330, state.audioContext.currentTime + 8); // E4
-            oscillator.frequency.exponentialRampToValueAtTime(220, state.audioContext.currentTime + 12); // A3
-            
-            gainNode.gain.setValueAtTime(0, state.audioContext.currentTime);
-            gainNode.gain.linearRampToValueAtTime(0.05, state.audioContext.currentTime + 1);
-            gainNode.gain.linearRampToValueAtTime(0, state.audioContext.currentTime + 12);
-            
-            oscillator.connect(gainNode);
-            gainNode.connect(state.audioContext.destination);
-            
-            oscillator.start(state.audioContext.currentTime);
-            oscillator.stop(state.audioContext.currentTime + 12);
-            
-            // Loop
-            setTimeout(() => {
-                if (state.isMusicPlaying && state.audioContext && state.audioContext.state !== 'closed') {
-                    createAmbientSound();
-                }
-            }, 11000);
-        }
+    const MUSIC = {
+        videoId: 'Tt7KcLSvjBU',
+        start: 30,   // 0:30
+        end: 116     // 1:16
+    };
 
+    let ytPlayer = null;
+    let ytReady = false;
+
+    // Called automatically by the YouTube IFrame API once it loads
+    window.onYouTubeIframeAPIReady = function () {
+        ytPlayer = new YT.Player('ytPlayer', {
+            videoId: MUSIC.videoId,
+            playerVars: {
+                start: MUSIC.start,
+                end: MUSIC.end,
+                autoplay: 0,
+                controls: 0,
+                disablekb: 1,
+                modestbranding: 1,
+                rel: 0,
+                playsinline: 1,
+                iv_load_policy: 3
+            },
+            events: {
+                onReady: function () {
+                    ytReady = true;
+                },
+                onStateChange: function (event) {
+                    // When the 30s->1:16 clip ends, loop it while music is on
+                    if (event.data === YT.PlayerState.ENDED) {
+                        if (state.isMusicPlaying) {
+                            ytPlayer.seekTo(MUSIC.start, true);
+                            ytPlayer.playVideo();
+                        } else {
+                            state.isMusicPlaying = false;
+                            elements.musicToggle.classList.add('muted');
+                        }
+                    }
+                }
+            }
+        });
+    };
+
+    function initMusicToggle() {
         elements.musicToggle.addEventListener('click', () => {
             if (!state.isMusicPlaying) {
-                // Resume audio context if suspended
-                if (state.audioContext && state.audioContext.state === 'suspended') {
-                    state.audioContext.resume();
-                }
-                
                 state.isMusicPlaying = true;
                 elements.musicToggle.classList.remove('muted');
                 elements.musicToggle.setAttribute('aria-label', 'Müziği kapat');
                 elements.musicToggle.title = 'Müziği kapat';
-                
-                createAmbientSound();
+
+                if (ytReady && ytPlayer) {
+                    // If we previously reached the end, restart from 0:30
+                    const t = ytPlayer.getCurrentTime();
+                    if (t >= MUSIC.end - 0.5 || t < MUSIC.start) {
+                        ytPlayer.seekTo(MUSIC.start, true);
+                    }
+                    ytPlayer.playVideo();
+                } else {
+                    // Player not ready yet; retry shortly
+                    let attempts = 0;
+                    const tryPlay = setInterval(() => {
+                        attempts++;
+                        if (ytReady && ytPlayer) {
+                            ytPlayer.seekTo(MUSIC.start, true);
+                            ytPlayer.playVideo();
+                            clearInterval(tryPlay);
+                        } else if (attempts > 40) {
+                            clearInterval(tryPlay);
+                        }
+                    }, 250);
+                }
             } else {
                 state.isMusicPlaying = false;
                 elements.musicToggle.classList.add('muted');
                 elements.musicToggle.setAttribute('aria-label', 'Müziği aç');
                 elements.musicToggle.title = 'Müziği aç';
-                
-                if (state.audioContext) {
-                    state.audioContext.suspend();
+
+                if (ytPlayer) {
+                    ytPlayer.pauseVideo();
                 }
             }
         });
