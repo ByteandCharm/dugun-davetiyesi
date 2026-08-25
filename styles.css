@@ -619,10 +619,10 @@ body {
 
 .countdown-lace-bottom { transform: rotate(180deg); }
 
-/* Two countdowns side by side */
+/* Two countdowns side by side (auto-wrap to single column on narrow screens) */
 .countdowns-row {
     display: grid;
-    grid-template-columns: 1fr 1fr;
+    grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
     gap: 1.2rem;
     margin-top: 1.2rem;
 }
@@ -992,8 +992,6 @@ body {
     .countdown-value { font-size: 1.7rem; }
     .countdown-divider { font-size: 1.7rem; }
     .countdown-item { min-width: 48px; }
-    
-    .countdowns-row { grid-template-columns: 1fr; }
     
     .music-toggle { bottom: 1rem; right: 1rem; width: 48px; height: 48px; }
 }
