@@ -31,6 +31,12 @@
             minutes: document.getElementById('minutes'),
             seconds: document.getElementById('seconds')
         },
+        countdown2: {
+            days: document.getElementById('days2'),
+            hours: document.getElementById('hours2'),
+            minutes: document.getElementById('minutes2'),
+            seconds: document.getElementById('seconds2')
+        },
         musicToggle: document.getElementById('musicToggle'),
         scrollIndicator: document.getElementById('scrollIndicator'),
         bgParticles: document.getElementById('bgParticles'),
@@ -92,10 +98,12 @@
 
         if (distance <= 0) {
             // Wedding day has arrived
-            elements.countdown.days.textContent = '00';
-            elements.countdown.hours.textContent = '00';
-            elements.countdown.minutes.textContent = '00';
-            elements.countdown.seconds.textContent = '00';
+            ['countdown', 'countdown2'].forEach((key) => {
+                elements[key].days.textContent = '00';
+                elements[key].hours.textContent = '00';
+                elements[key].minutes.textContent = '00';
+                elements[key].seconds.textContent = '00';
+            });
             
             if (state.countdownInterval) {
                 clearInterval(state.countdownInterval);
@@ -106,11 +114,16 @@
 
         const time = utils.formatTime(distance);
         
-        // Animate number changes
+        // Animate number changes for both countdowns
         animateNumber(elements.countdown.days, time.days);
         animateNumber(elements.countdown.hours, time.hours);
         animateNumber(elements.countdown.minutes, time.minutes);
         animateNumber(elements.countdown.seconds, time.seconds);
+
+        animateNumber(elements.countdown2.days, time.days);
+        animateNumber(elements.countdown2.hours, time.hours);
+        animateNumber(elements.countdown2.minutes, time.minutes);
+        animateNumber(elements.countdown2.seconds, time.seconds);
     }
 
     function animateNumber(element, newValue) {

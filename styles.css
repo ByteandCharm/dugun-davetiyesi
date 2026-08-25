@@ -619,6 +619,29 @@ body {
 
 .countdown-lace-bottom { transform: rotate(180deg); }
 
+/* Two countdowns side by side */
+.countdowns-row {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 1.2rem;
+    margin-top: 1.2rem;
+}
+
+.countdown-unit {
+    min-width: 0;
+}
+
+/* Second panel: cream + thin burgundy frame */
+.countdown-unit.alt-theme .countdown-header {
+    border: 1px solid var(--burgundy);
+    border-bottom: none;
+}
+
+.countdown-unit.alt-theme .countdown-card {
+    border: 1px solid var(--burgundy);
+    border-top: none;
+}
+
 .countdown {
     display: flex;
     align-items: center;
@@ -969,6 +992,8 @@ body {
     .countdown-value { font-size: 1.7rem; }
     .countdown-divider { font-size: 1.7rem; }
     .countdown-item { min-width: 48px; }
+    
+    .countdowns-row { grid-template-columns: 1fr; }
     
     .music-toggle { bottom: 1rem; right: 1rem; width: 48px; height: 48px; }
 }
